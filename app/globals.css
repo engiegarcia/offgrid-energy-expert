@@ -1,0 +1,106 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    color-scheme: light;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    @apply bg-ground font-sans text-base text-ink antialiased;
+    font-feature-settings: 'ss01', 'cv11';
+    text-rendering: optimizeLegibility;
+  }
+
+  ::selection {
+    @apply bg-accent/20;
+  }
+
+  /* Los números no llevan flechitas: se escriben, no se incrementan. */
+  input[type='number'] {
+    -moz-appearance: textfield;
+    appearance: textfield;
+  }
+  input[type='number']::-webkit-outer-spin-button,
+  input[type='number']::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+}
+
+@layer components {
+  /* Anillo de foco único para todo elemento interactivo del design system. */
+  .focus-ring {
+    @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-surface;
+  }
+
+  /* Igual que `.focus-ring`, para superficies oscuras (cabecera, héroe). */
+  .focus-ring-dark {
+    @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sun focus-visible:ring-offset-2 focus-visible:ring-offset-night;
+  }
+
+  /* Campos de formulario: el foco se marca con borde + anillo, sin offset. */
+  .focus-field {
+    @apply focus-visible:border-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent;
+  }
+}
+
+/* ------------------------------------------------------------------ Leaflet */
+
+/* Marcador propio (sin imágenes por defecto de Leaflet, que Next no resuelve). */
+.marker-pin {
+  display: block;
+  width: 22px;
+  height: 22px;
+  border: 3px solid #fff;
+  border-radius: 9999px;
+  box-shadow:
+    0 0 0 6px rgb(16 48 58 / 0.14),
+    0 2px 6px rgb(16 48 58 / 0.45);
+  transition: background-color 200ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Teselas más calmadas y frías para que el mapa comparta la paleta del resto. */
+.leaflet-tile-pane {
+  filter: saturate(0.5) contrast(0.94) hue-rotate(-8deg);
+}
+
+.leaflet-container {
+  font-family: inherit;
+  background: #dfe7e4;
+}
+
+.leaflet-container:focus-visible {
+  outline: 2px solid #17565f;
+  outline-offset: -2px;
+}
+
+.leaflet-control-attribution {
+  font-size: 10px;
+}
+
+.leaflet-bar {
+  border: 1px solid #bcc7c3 !important;
+  border-radius: 8px !important;
+  box-shadow: 0 1px 2px rgb(16 48 58 / 0.08) !important;
+  overflow: hidden;
+}
+
+.leaflet-bar a {
+  color: #12282e;
+}
+
+/* -------------------------------------------------------------- Reduced motion */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

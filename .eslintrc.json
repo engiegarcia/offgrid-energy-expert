@@ -1,0 +1,32 @@
+{
+  "root": true,
+  "extends": [
+    "next/core-web-vitals",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:jsx-a11y/recommended",
+    "prettier"
+  ],
+  "parser": "@typescript-eslint/parser",
+  "plugins": ["@typescript-eslint", "jsx-a11y"],
+  "rules": {
+    "@typescript-eslint/no-explicit-any": "error",
+    "@typescript-eslint/consistent-type-imports": ["error", { "prefer": "type-imports" }],
+    "@typescript-eslint/no-unused-vars": [
+      "error",
+      { "argsIgnorePattern": "^_", "varsIgnorePattern": "^_" }
+    ],
+    "jsx-a11y/no-autofocus": "error",
+    "react/self-closing-comp": "error",
+    "eqeqeq": ["error", "always"]
+  },
+  "ignorePatterns": [
+    "node_modules",
+    ".next",
+    "out",
+    "coverage",
+    "playwright-report",
+    "test-results",
+    "next-env.d.ts",
+    "*.config.js"
+  ]
+}
