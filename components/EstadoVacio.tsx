@@ -19,9 +19,14 @@ function Mensaje({ titulo, children }: { titulo: string; children: React.ReactNo
 
 /** Ninguna regla de la Capa 2 se disparó: no es un error, es un resultado. */
 export function EstadoVacio({ viabilidades }: { viabilidades: ViabilidadesPorRecurso }) {
-  const mejor = Math.max(...RECURSOS.map((r) => VALOR_ORDINAL[viabilidades[r]]));
-  const lideres = RECURSOS.filter((r) => VALOR_ORDINAL[viabilidades[r]] === mejor);
-  const nivel = lideres[0] ? NIVEL_LABEL[viabilidades[lideres[0]]].toLowerCase() : '';
+  const mejor = Math.max(
+    ...RECURSOS.map((r) => VALOR_ORDINAL[viabilidades?.[r] ?? 'inviable'] ?? 0),
+  );
+  const lideres = RECURSOS.filter(
+    (r) => (VALOR_ORDINAL[viabilidades?.[r] ?? 'inviable'] ?? 0) === mejor,
+  );
+  const liderNivel = lideres[0] ? (viabilidades?.[lideres[0]] ?? 'inviable') : 'inviable';
+  const nivel = (NIVEL_LABEL[liderNivel] ?? 'Inviable').toLowerCase();
   const nombres = lideres.map((r) => RECURSO_LABEL[r]).join(' y ');
 
   return (

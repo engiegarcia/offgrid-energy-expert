@@ -87,7 +87,9 @@ function Pista(props: {
  */
 export function GraficoViabilidad({ viabilidades }: { viabilidades: ViabilidadesPorRecurso }) {
   const datos: Dato[] = RECURSOS.map((recurso) => {
-    const nivel = viabilidades[recurso];
+    const rawNivel = viabilidades?.[recurso];
+    const nivel: NivelViabilidad =
+      rawNivel && rawNivel in NIVEL_LABEL ? rawNivel : 'inviable';
     return {
       etiqueta: RECURSO_LABEL[recurso],
       nivel,

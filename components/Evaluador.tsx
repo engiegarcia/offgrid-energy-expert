@@ -73,9 +73,11 @@ export function Evaluador() {
 
   // El marcador toma el color del mejor nivel de viabilidad del resultado.
   const mejorNivel: NivelViabilidad | undefined = useMemo(() => {
-    if (!data) return undefined;
-    const max = Math.max(...RECURSOS.map((r) => VALOR_ORDINAL[data.viabilidades[r]]));
-    return NIVELES_ORDEN[max];
+    if (!data?.viabilidades) return undefined;
+    const max = Math.max(
+      ...RECURSOS.map((r) => VALOR_ORDINAL[data.viabilidades[r] ?? 'inviable'] ?? 0),
+    );
+    return NIVELES_ORDEN[max] ?? 'inviable';
   }, [data]);
 
   const anuncio = isPending

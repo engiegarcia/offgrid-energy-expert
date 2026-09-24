@@ -9,7 +9,12 @@ import { listaVariants } from '@/lib/motion';
 import type { EvaluacionResponse } from '@/types/api';
 
 export function ResultadosEvaluacion({ data }: { data: EvaluacionResponse }) {
-  const demanda = DEMANDA_INFO[data.demanda_clasificada];
+  const demanda =
+    DEMANDA_INFO[data.demanda_clasificada] ??
+    DEMANDA_INFO.medio_transicion ?? {
+      label: data.demanda_clasificada || 'Media',
+      descripcion: 'Clasificación de consumo de la comunidad.',
+    };
   const total = data.recomendaciones.length;
 
   return (

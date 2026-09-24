@@ -6,7 +6,9 @@ import type {
   EvaluacionResponse,
   FastApiValidationIssue,
   HealthResponse,
+  NivelViabilidad,
   ReglaMetadata,
+  ViabilidadesPorRecurso,
 } from '../types/api';
 
 const API_URL = (process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:8000').replace(/\/+$/, '');
@@ -126,6 +128,28 @@ function esEvaluacionResponse(v: unknown): v is EvaluacionResponse {
   );
 }
 
+function normalizarViabilidades(raw: Record<string, unknown>): ViabilidadesPorRecurso {
+  const get = (...keys: string[]): NivelViabilidad => {
+    for (const k of keys) {
+      const val = raw[k];
+      if (
+        typeof val === 'string' &&
+        (val === 'alta' || val === 'media' || val === 'baja' || val === 'inviable')
+      ) {
+        return val;
+      }
+    }
+    return 'inviable';
+  };
+
+  return {
+    solar: get('solar'),
+    eolico: get('eolico', 'eolica'),
+    hidraulico: get('hidraulico', 'hidraulica'),
+    biomasa: get('biomasa'),
+  };
+}
+
 /* ---------------------------------------------------------- Endpoints */
 
 export async function evaluarZona(payload: EvaluacionRequest): Promise<EvaluacionResponse> {
@@ -137,7 +161,10 @@ export async function evaluarZona(payload: EvaluacionRequest): Promise<Evaluacio
   await lanzarSiError(res);
   const data = await leerJson(res);
   if (!esEvaluacionResponse(data)) throw new ApiServerError(res.status, 'RESPUESTA_INVALIDA');
-  return data;
+  return {
+    ...data,
+    viabilidades: normalizarViabilidades(data.viabilidades as Record<string, unknown>),
+  };
 }
 
 export async function obtenerReglas(init: RequestInit = {}): Promise<ReglaMetadata[]> {
