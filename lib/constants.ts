@@ -229,14 +229,16 @@ export const EJEMPLO_SIN_RECURSOS: EvaluacionRequest = {
   presupuesto: 'bajo',
 };
 
+export const EJEMPLO_PREDETERMINADO: EjemploComunidad = {
+  id: 'san-marcos',
+  nombre: 'San Marcos (Test)',
+  descripcion: 'Caso base · Hidro y biomasa moderados (4.8 kWh/m², 75 l/s)',
+  badge: 'Base',
+  datos: EJEMPLO_SAN_MARCOS,
+};
+
 export const EJEMPLOS_COMUNIDADES: EjemploComunidad[] = [
-  {
-    id: 'san-marcos',
-    nombre: 'San Marcos (Test)',
-    descripcion: 'Caso base · Hidro y biomasa moderados (4.8 kWh/m², 75 l/s)',
-    badge: 'Base',
-    datos: EJEMPLO_SAN_MARCOS,
-  },
+  EJEMPLO_PREDETERMINADO,
   {
     id: 'puno',
     nombre: 'Puno - Alta Solar',

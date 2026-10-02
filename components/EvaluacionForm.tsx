@@ -9,7 +9,12 @@ import { Card, CardBody, CardHeader, CardTitle } from '@/components/ui/Card';
 import { Input } from '@/components/ui/Input';
 import { Select } from '@/components/ui/Select';
 import { cn } from '@/lib/cn';
-import { EJEMPLOS_COMUNIDADES, type EjemploComunidad, PRESUPUESTO_LABEL } from '@/lib/constants';
+import {
+  EJEMPLO_PREDETERMINADO,
+  EJEMPLOS_COMUNIDADES,
+  type EjemploComunidad,
+  PRESUPUESTO_LABEL,
+} from '@/lib/constants';
 import { evaluacionRequestSchema, type EvaluacionFormValues } from '@/lib/schemas';
 import type { EvaluacionRequest } from '@/types/api';
 
@@ -139,7 +144,7 @@ export function EvaluacionForm({ onSubmit, isPending, serverErrors }: Evaluacion
     }
   }, [serverErrors, setError]);
 
-  const [ejemploActivo, setEjemploActivo] = useState<EjemploComunidad>(EJEMPLOS_COMUNIDADES[0]);
+  const [ejemploActivo, setEjemploActivo] = useState<EjemploComunidad>(EJEMPLO_PREDETERMINADO);
   const [menuAbierto, setMenuAbierto] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
 
