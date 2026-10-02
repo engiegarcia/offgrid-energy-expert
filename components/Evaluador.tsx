@@ -42,6 +42,7 @@ export function Evaluador() {
 
   // Ubicación solo visual. NO forma parte del payload (ver MapaComunidad.tsx).
   const [ubicacion, setUbicacion] = useState<Coordenadas | null>(null);
+  const [requestEnviado, setRequestEnviado] = useState<EvaluacionRequest | null>(null);
 
   const ultimoPayload = useRef<EvaluacionRequest | null>(null);
   const resultados = useRef<HTMLDivElement>(null);
@@ -49,6 +50,7 @@ export function Evaluador() {
   const evaluar = useCallback(
     (payload: EvaluacionRequest) => {
       ultimoPayload.current = payload;
+      setRequestEnviado(payload);
       mutate(payload);
     },
     [mutate],
@@ -99,7 +101,7 @@ export function Evaluador() {
         ) : isError && error ? (
           <ErrorResultado error={error} onRetry={reintentar} />
         ) : data ? (
-          <ResultadosEvaluacion data={data} />
+          <ResultadosEvaluacion data={data} request={requestEnviado} />
         ) : (
           <EstadoInicial />
         )}

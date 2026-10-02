@@ -4,11 +4,18 @@ import { motion } from 'framer-motion';
 import { EstadoVacio } from '@/components/EstadoVacio';
 import { GraficoViabilidad } from '@/components/GraficoViabilidad';
 import { RecomendacionCard } from '@/components/RecomendacionCard';
+import { TrazaRazonamiento } from '@/components/TrazaRazonamiento';
 import { DEMANDA_INFO } from '@/lib/constants';
 import { listaVariants } from '@/lib/motion';
-import type { EvaluacionResponse } from '@/types/api';
+import type { EvaluacionRequest, EvaluacionResponse } from '@/types/api';
 
-export function ResultadosEvaluacion({ data }: { data: EvaluacionResponse }) {
+export function ResultadosEvaluacion({
+  data,
+  request,
+}: {
+  data: EvaluacionResponse;
+  request?: EvaluacionRequest | null;
+}) {
   const demanda =
     DEMANDA_INFO[data.demanda_clasificada] ??
     DEMANDA_INFO.medio_transicion ?? {
@@ -53,6 +60,7 @@ export function ResultadosEvaluacion({ data }: { data: EvaluacionResponse }) {
       )}
 
       <GraficoViabilidad viabilidades={data.viabilidades} />
+      <TrazaRazonamiento data={data} request={request} />
     </div>
   );
 }

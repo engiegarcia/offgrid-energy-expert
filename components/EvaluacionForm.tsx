@@ -1,14 +1,15 @@
 'use client';
 
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useEffect, useRef, type ReactNode } from 'react';
+import { useEffect, useRef, useState, type ReactNode } from 'react';
 import { useForm } from 'react-hook-form';
-import { IconBolt, IconDrop, IconLeaf, IconSun, IconUsers } from '@/components/icons';
+import { IconBolt, IconChevronDown, IconDrop, IconLeaf, IconSun, IconUsers } from '@/components/icons';
 import { Button } from '@/components/ui/Button';
 import { Card, CardBody, CardHeader, CardTitle } from '@/components/ui/Card';
 import { Input } from '@/components/ui/Input';
 import { Select } from '@/components/ui/Select';
-import { EJEMPLO_SAN_MARCOS, PRESUPUESTO_LABEL } from '@/lib/constants';
+import { cn } from '@/lib/cn';
+import { EJEMPLO_SAN_MARCOS, EJEMPLOS_COMUNIDADES, type EjemploComunidad, PRESUPUESTO_LABEL } from '@/lib/constants';
 import { evaluacionRequestSchema, type EvaluacionFormValues } from '@/lib/schemas';
 import type { EvaluacionRequest } from '@/types/api';
 
@@ -138,6 +139,34 @@ export function EvaluacionForm({ onSubmit, isPending, serverErrors }: Evaluacion
     }
   }, [serverErrors, setError]);
 
+  const [ejemploActivo, setEjemploActivo] = useState<EjemploComunidad>(EJEMPLOS_COMUNIDADES[0]);
+  const [menuAbierto, setMenuAbierto] = useState(false);
+  const menuRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!menuAbierto) return;
+    const clickAfuera = (e: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
+        setMenuAbierto(false);
+      }
+    };
+    const presionarTecla = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setMenuAbierto(false);
+    };
+    document.addEventListener('mousedown', clickAfuera);
+    document.addEventListener('keydown', presionarTecla);
+    return () => {
+      document.removeEventListener('mousedown', clickAfuera);
+      document.removeEventListener('keydown', presionarTecla);
+    };
+  }, [menuAbierto]);
+
+  const cargarEjemplo = (ejemplo: EjemploComunidad) => {
+    setEjemploActivo(ejemplo);
+    reset(ejemplo.datos, { keepDefaultValues: true });
+    setMenuAbierto(false);
+  };
+
   const enviar = handleSubmit((values) => {
     onSubmit(sinAgua ? { ...values, caudal: 0, salto_neto: 0 } : values);
   });
@@ -175,14 +204,73 @@ export function EvaluacionForm({ onSubmit, isPending, serverErrors }: Evaluacion
           </CardTitle>
           <p className="text-sm text-ink-muted">Mediciones de campo y contexto socioeconómico.</p>
         </div>
-        <Button
-          variant="secondary"
-          size="sm"
-          className="shrink-0"
-          onClick={() => reset(EJEMPLO_SAN_MARCOS, { keepDefaultValues: true })}
-        >
-          Usar ejemplo
-        </Button>
+        <div className="relative inline-flex items-center rounded-md shadow-xs shrink-0" ref={menuRef}>
+          <Button
+            variant="secondary"
+            size="sm"
+            className="rounded-r-none border-r-0 focus:z-10"
+            onClick={() => cargarEjemplo(ejemploActivo)}
+            title={`Cargar ejemplo: ${ejemploActivo.nombre}`}
+          >
+            Usar ejemplo
+          </Button>
+          <Button
+            variant="secondary"
+            size="sm"
+            className="rounded-l-none px-2 focus:z-10"
+            aria-label="Seleccionar caso de ejemplo"
+            aria-haspopup="menu"
+            aria-expanded={menuAbierto}
+            onClick={() => setMenuAbierto((prev) => !prev)}
+          >
+            <IconChevronDown
+              className={cn('h-3.5 w-3.5 transition-transform duration-150', menuAbierto && 'rotate-180')}
+            />
+          </Button>
+
+          {menuAbierto && (
+            <div
+              role="menu"
+              aria-label="Casos de ejemplo"
+              className="absolute right-0 top-full mt-1.5 z-50 w-72 origin-top-right rounded-xl border border-line bg-surface p-1.5 shadow-overlay animate-fade-in"
+            >
+              <div className="px-2.5 py-1.5 text-[11px] font-semibold uppercase tracking-wider text-ink-subtle">
+                Casos de ejemplo
+              </div>
+              <div className="flex flex-col gap-0.5">
+                {EJEMPLOS_COMUNIDADES.map((ej) => {
+                  const seleccionado = ej.id === ejemploActivo.id;
+                  return (
+                    <button
+                      key={ej.id}
+                      role="menuitem"
+                      type="button"
+                      onClick={() => cargarEjemplo(ej)}
+                      className={cn(
+                        'group flex flex-col items-start gap-1 rounded-lg px-2.5 py-2 text-left transition-colors',
+                        seleccionado
+                          ? 'bg-accent-soft text-ink font-medium'
+                          : 'text-ink hover:bg-ground hover:text-ink',
+                      )}
+                    >
+                      <div className="flex w-full items-center justify-between gap-2">
+                        <span className="font-display text-xs font-semibold text-ink group-hover:text-accent">
+                          {ej.nombre}
+                        </span>
+                        <span className="rounded bg-line/60 px-1.5 py-0.5 font-mono text-[10px] text-ink-muted">
+                          {ej.badge}
+                        </span>
+                      </div>
+                      <p className="text-[11px] leading-tight text-ink-muted">
+                        {ej.descripcion}
+                      </p>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+        </div>
       </CardHeader>
       <CardBody>
         <form onSubmit={enviar} noValidate className="flex flex-col gap-7">

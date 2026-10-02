@@ -146,7 +146,15 @@ export const CAPA_LABEL: Record<number, string> = {
 export const MAPA_CENTRO_INICIAL = { lat: -9.19, lng: -75.015 } as const;
 export const MAPA_ZOOM_INICIAL = 5;
 
-/* --------------------------------------------------------------- Ejemplo */
+/* --------------------------------------------------------------- Ejemplos */
+
+export interface EjemploComunidad {
+  id: string;
+  nombre: string;
+  descripcion: string;
+  badge: string;
+  datos: EvaluacionRequest;
+}
 
 /** Mismo ejemplo del backend ("San-Marcos-Test"). */
 export const EJEMPLO_SAN_MARCOS: EvaluacionRequest = {
@@ -160,6 +168,111 @@ export const EJEMPLO_SAN_MARCOS: EvaluacionRequest = {
   consumo_diario: 4200,
   presupuesto: 'medio',
 };
+
+export const EJEMPLO_PUNO: EvaluacionRequest = {
+  id_comunidad: 'Puno-Alta-Solar',
+  radiacion: 6.1,
+  velocidad_viento: 2.5,
+  hay_curso_agua: 'no',
+  caudal: 0,
+  salto_neto: 0,
+  masa_estiercol: 3.0,
+  consumo_diario: 900,
+  presupuesto: 'bajo',
+};
+
+export const EJEMPLO_JUNIN: EvaluacionRequest = {
+  id_comunidad: 'Junin-Hidraulica',
+  radiacion: 3.2,
+  velocidad_viento: 5.0,
+  hay_curso_agua: 'si',
+  caudal: 120.0,
+  salto_neto: 25.0,
+  masa_estiercol: 8.0,
+  consumo_diario: 4500,
+  presupuesto: 'medio',
+};
+
+export const EJEMPLO_CUSCO: EvaluacionRequest = {
+  id_comunidad: 'Cusco-Hibrido',
+  radiacion: 6.5,
+  velocidad_viento: 7.2,
+  hay_curso_agua: 'si',
+  caudal: 150.0,
+  salto_neto: 30.0,
+  masa_estiercol: 25.0,
+  consumo_diario: 5200,
+  presupuesto: 'alto',
+};
+
+export const EJEMPLO_AYACUCHO: EvaluacionRequest = {
+  id_comunidad: 'Ayacucho-Biomasa',
+  radiacion: 4.6,
+  velocidad_viento: 3.5,
+  hay_curso_agua: 'no',
+  caudal: 0,
+  salto_neto: 0,
+  masa_estiercol: 18.0,
+  consumo_diario: 2500,
+  presupuesto: 'medio',
+};
+
+export const EJEMPLO_SIN_RECURSOS: EvaluacionRequest = {
+  id_comunidad: 'Sin-Recursos',
+  radiacion: 1.0,
+  velocidad_viento: 1.0,
+  hay_curso_agua: 'no',
+  caudal: 0,
+  salto_neto: 0,
+  masa_estiercol: 1.0,
+  consumo_diario: 500,
+  presupuesto: 'bajo',
+};
+
+export const EJEMPLOS_COMUNIDADES: EjemploComunidad[] = [
+  {
+    id: 'san-marcos',
+    nombre: 'San Marcos (Test)',
+    descripcion: 'Caso base · Hidro y biomasa moderados (4.8 kWh/m², 75 l/s)',
+    badge: 'Base',
+    datos: EJEMPLO_SAN_MARCOS,
+  },
+  {
+    id: 'puno',
+    nombre: 'Puno - Alta Solar',
+    descripcion: 'Alta radiación (6.1 kWh/m²) · Sin agua · Bajo presupuesto',
+    badge: 'Solar',
+    datos: EJEMPLO_PUNO,
+  },
+  {
+    id: 'junin',
+    nombre: 'Junín - Hidráulica',
+    descripcion: 'Alto caudal (120 l/s, salto 25 m) · Presupuesto medio',
+    badge: 'Hidro',
+    datos: EJEMPLO_JUNIN,
+  },
+  {
+    id: 'cusco',
+    nombre: 'Cusco - Híbrido',
+    descripcion: 'Solar (6.5) + Hidro (150 l/s, 30 m) · Alto presupuesto',
+    badge: 'Híbrido',
+    datos: EJEMPLO_CUSCO,
+  },
+  {
+    id: 'ayacucho',
+    nombre: 'Ayacucho - Biomasa',
+    descripcion: 'Biomasa destacada (18 kg/día) · Sin agua · Presupuesto medio',
+    badge: 'Biomasa',
+    datos: EJEMPLO_AYACUCHO,
+  },
+  {
+    id: 'sin-recursos',
+    nombre: 'Sin Recursos',
+    descripcion: 'Baja radiación (1.0), sin agua ni viento · Caso inviable',
+    badge: 'Inviable',
+    datos: EJEMPLO_SIN_RECURSOS,
+  },
+];
 
 /* ----------------------------------------------------------------- Red */
 

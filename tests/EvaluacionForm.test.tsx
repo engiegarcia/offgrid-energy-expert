@@ -130,6 +130,33 @@ describe('EvaluacionForm', () => {
     expect(screen.getByLabelText('Presupuesto')).toHaveValue('medio');
   });
 
+  it('permite seleccionar otros casos de ejemplo desde el menú desplegable', async () => {
+    const user = userEvent.setup();
+    render(<EvaluacionForm onSubmit={vi.fn()} isPending={false} />);
+
+    await user.click(screen.getByRole('button', { name: 'Seleccionar caso de ejemplo' }));
+    expect(screen.getByRole('menu', { name: 'Casos de ejemplo' })).toBeInTheDocument();
+
+    await user.click(screen.getByText('Puno - Alta Solar'));
+    expect(screen.getByLabelText('Nombre o código')).toHaveValue('Puno-Alta-Solar');
+    expect(screen.getByLabelText('Radiación solar')).toHaveValue(6.1);
+    expect(screen.getByLabelText('Caudal')).toBeDisabled();
+    expect(screen.getByLabelText('Presupuesto')).toHaveValue('bajo');
+
+    await user.click(screen.getByRole('button', { name: 'Seleccionar caso de ejemplo' }));
+    await user.click(screen.getByText('Ayacucho - Biomasa'));
+    expect(screen.getByLabelText('Nombre o código')).toHaveValue('Ayacucho-Biomasa');
+    expect(screen.getByLabelText('Estiércol disponible')).toHaveValue(18);
+    expect(screen.getByLabelText('Consumo diario')).toHaveValue(2500);
+    expect(screen.getByLabelText('Presupuesto')).toHaveValue('medio');
+
+    await user.click(screen.getByRole('button', { name: 'Seleccionar caso de ejemplo' }));
+    await user.click(screen.getByText('Sin Recursos'));
+    expect(screen.getByLabelText('Nombre o código')).toHaveValue('Sin-Recursos');
+    expect(screen.getByLabelText('Radiación solar')).toHaveValue(1);
+    expect(screen.getByLabelText('Presupuesto')).toHaveValue('bajo');
+  });
+
   it('muestra los errores 422 del backend junto al campo', async () => {
     render(
       <EvaluacionForm
